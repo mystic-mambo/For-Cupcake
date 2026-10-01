@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>a little comfort</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf2e9;
+    --plum: #4a2545;
+    --coral: #e8847a;
+    --honey: #e2a53d;
+    --sage: #7e9b7a;
+    --card: #ffffff;
+    --display: "Fraunces", Georgia, serif;
+    --body: "Quicksand", "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--cream);
+    color: var(--plum);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; }
+  :focus-visible { outline: 3px solid var(--honey); outline-offset: 3px; }
+  [hidden] { display: none !important; }
+
+  /* ambient floating hearts */
+  #sky {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .puff {
+    position: absolute;
+    bottom: -40px;
+    font-size: 20px;
+    opacity: 0.5;
+    animation: rise linear infinite;
+  }
+  @keyframes rise {
+    to { transform: translateY(-115vh) translateX(var(--dx, 0px)); opacity: 0; }
+  }
+
+  main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; }
+
+  .hero { text-align: center; margin-bottom: 44px; }
+  .hero .eyebrow { font-size: 15px; color: var(--coral); margin: 0 0 6px; }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-style: italic;
+    font-size: clamp(32px, 6vw, 48px);
+    line-height: 1.15;
+    margin: 0 0 16px;
+  }
+  .hero p { max-width: 46ch; margin: 0 auto; font-size: 19px; color: #6b4763; }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0 0 16px;
+  }
+
+  section.block { margin-bottom: 48px; }
+
+  .menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+  }
+  .tile {
+    position: relative;
+    padding: 20px 16px;
+    background: var(--card);
+    border: 1px solid rgba(74, 37, 69, 0.12);
+    border-radius: 18px;
+    text-align: left;
+    box-shadow: 0 10px 24px -16px rgba(74, 37, 69, 0.4);
+    transition: transform 0.15s ease;
+  }
+  .tile:hover, .tile:focus-visible { transform: translateY(-3px); }
+  .tile .ico { font-size: 26px; display: block; margin-bottom: 10px; }
+  .tile .lbl { font-weight: 600; font-size: 16px; }
+
+  .reveal {
+    margin-top: 18px;
+    padding: 18px 20px;
+    background: #fff;
+    border-radius: 16px;
+    border-left: 5px solid var(--coral);
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 20px;
+    box-shadow: 0 10px 24px -16px rgba(74, 37, 69, 0.4);
+  }
+  .reveal .tag { display: block; font-family: var(--body); font-style: normal; font-weight: 600; font-size: 13px; color: var(--coral); margin-bottom: 6px; }
+
+  .checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: 0 8px 18px -14px rgba(74, 37, 69, 0.4);
+  }
+  .checklist input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--coral); flex-shrink: 0; }
+  .checklist label { cursor: pointer; }
+  .checklist li.done label { text-decoration: line-through; opacity: 0.55; }
+
+  .hug-wrap { text-align: center; }
+  .hug-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 26px;
+    background: var(--plum);
+    color: #fff;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 17px;
+  }
+  .hug-btn .h { font-size: 20px; display: inline-block; transition: transform 0.25s ease; }
+  .hug-btn.sent .h { transform: scale(1.4); }
+  #hugMsg { margin-top: 14px; font-family: var(--display); font-style: italic; font-size: 19px; min-height: 1.4em; }
+
+  .song-card {
+    padding: 18px;
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 10px 24px -16px rgba(74, 37, 69, 0.4);
+  }
+  .song-card p { margin: 0 0 12px; font-size: 15px; color: #6b4763; }
+  .song-frame-wrap iframe { width: 100%; border: 0; border-radius: 12px; display: block; }
+
+  footer { text-align: center; padding-top: 10px; }
+  footer p { font-family: var(--display); font-style: italic; font-size: 18px; color: #6b4763; margin: 0; }
+  footer .sign { font-family: var(--body); font-style: normal; font-weight: 600; font-size: 14px; color: var(--coral); margin-top: 6px; }
+  #loveLine {
+    margin: 0 0 6px;
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(26px, 5vw, 34px);
+    color: var(--plum);
+  }
+
+  @media (max-width: 480px) {
+    main { padding: 40px 16px 64px; }
+    .hero p { font-size: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .puff { animation: none; opacity: 0; }
+    .tile { transition: none; }
+    .hug-btn .h { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="sky" aria-hidden="true"></div>
+
+<main>
+
+  <header class="hero">
+    <p class="eyebrow" id="eyebrow"></p>
+    <h1 id="heroLine"></h1>
+    <p id="heroSub"></p>
+  </header>
+
+  <section class="block">
+    <h2>pick something</h2>
+    <div class="menu" id="menu"></div>
+    <div class="reveal" id="reveal" hidden>
+      <span class="tag" id="revealTag"></span>
+      <span id="revealText"></span>
+    </div>
+  </section>
+
+  <section class="block" id="songSection" hidden>
+    <h2>playing for you</h2>
+    <div class="song-card">
+      <p id="songCaption"></p>
+      <div class="song-frame-wrap" id="songFrame"></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>today's gentle list</h2>
+    <ul class="checklist" id="checklist"></ul>
+  </section>
+
+  <section class="block hug-wrap">
+    <h2>in case you need one</h2>
+    <button class="hug-btn" id="hugBtn"><span class="h">🫂</span><span id="hugLabel"></span></button>
+    <p id="hugMsg"></p>
+  </section>
+
+  <footer>
+    <p id="loveLine"></p>
+    <p id="footerLine"></p>
+    <p class="sign" id="footerSign"></p>
+  </footer>
+
+</main>
+
+<script>
+/* ==========================================================
+   EDIT THIS BLOCK: everything the page says lives here.
+   Swap placeholder lines for your own, add or remove lines
+   freely. Keep the quote marks and commas.
+   ========================================================== */
+const CONFIG = {
+  eyebrow: "a little delivery, just for you",
+  heroLine: "rest today, I've got you",
+  heroSub: "No agenda, nothing to do, just a few things to make today softer.",
+
+  // Each button opens a random line from its list.
+  menu: [
+    { icon: "💌", label: "A love note", tag: "love note", lines: [
+      "You don't have to be okay today. I still think you're wonderful.",
+      "I like you on your best days and your worst ones, no conditions.",
+      "You make my life better just by being in it."
+    ]},
+    { icon: "😄", label: "A bad joke", tag: "bad joke", lines: [
+      "Why don't scientists trust atoms? Because they make up everything.",
+      "I told my blanket a joke today. It was a cover-up.",
+      "What do you call cheese that isn't yours? Nacho cheese."
+    ]},
+    { icon: "🌟", label: "A reason I like you", tag: "reason", lines: [
+      "The way you get excited about small things.",
+      "You're easy to talk to, even about hard stuff.",
+      "You're kind, even on days you don't feel like it."
+    ]},
+    { icon: "🎧", label: "A song for you", tag: "song pick", lines: [
+      "Put on your comfort playlist, the one you always skip to.",
+      "Here's your sign to replay that one song you like on repeat.",
+      "Good excuse to put on something slow and just lie down for a bit."
+    ]},
+    { icon: "🛁", label: "A self-care idea", tag: "self-care", lines: [
+      "Heating pad, warm drink, and your softest blanket.",
+      "Dim the lights, put your phone away for twenty minutes.",
+      "Hot shower, comfy clothes, no plans after."
+    ]},
+    { icon: "🍫", label: "A craving suggestion", tag: "craving", lines: [
+      "Chocolate. Any chocolate. No judgment.",
+      "Order the food you actually want, not the 'responsible' choice.",
+      "Tea and something sweet, on the couch, under a blanket."
+    ]}
+  ],
+
+  // A gentle checklist, nothing mandatory, just options.
+  checklist: [
+    "Drink some water",
+    "Put on comfy clothes",
+    "Have a warm drink or snack",
+    "Rest for a bit, no guilt",
+    "Text me if you want to talk, or don't, that's okay too"
+  ],
+
+  hugLabel: "Send yourself a hug",
+  hugMessages: [
+    "There. Virtual hug delivered. 🫂",
+    "Consider yourself hugged.",
+    "That one was a long one."
+  ],
+
+  // Paste a link to her favorite song here, either a Spotify track link
+  // (open.spotify.com/track/...) or a YouTube link (youtube.com/watch?v=... or youtu.be/...).
+  // Leave it as "" to hide this section entirely.
+  songUrl: "https://open.spotify.com/track/7xLfmCx9jcZNgzlIK7NupN?si=55800ef3c49d4f55",
+  songCaption: "Your song. Hit play.",
+
+  loveLine: "I love you.",
+  footerLine: "Feel better soon. I'm here either way.",
+  footerSign: "- Mambo"
+};
+
+/* ==========================================================
+   Below here you don't need to change anything.
+   ========================================================== */
+const $ = (sel, el = document) => el.querySelector(sel);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+$("#eyebrow").textContent = CONFIG.eyebrow;
+$("#heroLine").textContent = CONFIG.heroLine;
+$("#heroSub").textContent = CONFIG.heroSub;
+$("#loveLine").textContent = CONFIG.loveLine;
+$("#footerLine").textContent = CONFIG.footerLine;
+$("#footerSign").textContent = CONFIG.footerSign;
+$("#hugLabel").textContent = CONFIG.hugLabel;
+
+/* ---------- song embed ---------- */
+function buildSongEmbed(url) {
+  if (!url) return null;
+  try {
+    const u = new URL(url.trim());
+    const host = u.hostname.replace(/^www\./, "");
+
+    if (host === "open.spotify.com") {
+      const m = u.pathname.match(/\/track\/([a-zA-Z0-9]+)/);
+      if (m) {
+        return { type: "spotify", src: `https://open.spotify.com/embed/track/${m[1]}?theme=0` };
+      }
+    }
+
+    if (host === "youtu.be") {
+      const id = u.pathname.slice(1);
+      if (id) return { type: "youtube", src: `https://www.youtube.com/embed/${id}` };
+    }
+
+    if (host === "youtube.com" || host === "m.youtube.com") {
+      const id = u.searchParams.get("v");
+      if (id) return { type: "youtube", src: `https://www.youtube.com/embed/${id}` };
+    }
+  } catch (e) {
+    return null;
+  }
+  return null;
+}
+
+const songInfo = buildSongEmbed(CONFIG.songUrl);
+if (songInfo) {
+  $("#songCaption").textContent = CONFIG.songCaption;
+  const frame = document.createElement("iframe");
+  frame.src = songInfo.src;
+  frame.allow = "autoplay; encrypted-media; picture-in-picture";
+  frame.loading = "lazy";
+  if (songInfo.type === "spotify") {
+    frame.height = "152";
+    frame.title = "Spotify song";
+  } else {
+    frame.height = "215";
+    frame.title = "YouTube song";
+    frame.allowFullscreen = true;
+  }
+  $("#songFrame").appendChild(frame);
+  $("#songSection").hidden = false;
+}
+
+/* ---------- menu ---------- */
+const menuEl = $("#menu");
+const revealEl = $("#reveal");
+const last = {};
+CONFIG.menu.forEach((item, idx) => {
+  const b = document.createElement("button");
+  b.className = "tile";
+  b.innerHTML = '<span class="ico"></span><span class="lbl"></span>';
+  $(".ico", b).textContent = item.icon;
+  $(".lbl", b).textContent = item.label;
+  b.addEventListener("click", () => {
+    const lines = item.lines;
+    let i;
+    do { i = Math.floor(Math.random() * lines.length); } while (i === last[idx] && lines.length > 1);
+    last[idx] = i;
+    $("#revealTag").textContent = item.tag;
+    $("#revealText").textContent = lines[i];
+    revealEl.hidden = false;
+    revealEl.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" });
+  });
+  menuEl.appendChild(b);
+});
+
+/* ---------- checklist ---------- */
+const listEl = $("#checklist");
+CONFIG.checklist.forEach((text, i) => {
+  const li = document.createElement("li");
+  const id = "chk" + i;
+  li.innerHTML = `<input type="checkbox" id="${id}"><label for="${id}"></label>`;
+  $("label", li).textContent = text;
+  $("input", li).addEventListener("change", e => li.classList.toggle("done", e.target.checked));
+  listEl.appendChild(li);
+});
+
+/* ---------- hug button ---------- */
+const hugBtn = $("#hugBtn");
+let lastHug = -1;
+hugBtn.addEventListener("click", () => {
+  hugBtn.classList.add("sent");
+  setTimeout(() => hugBtn.classList.remove("sent"), 350);
+  const msgs = CONFIG.hugMessages;
+  let i;
+  do { i = Math.floor(Math.random() * msgs.length); } while (i === lastHug && msgs.length > 1);
+  lastHug = i;
+  $("#hugMsg").textContent = msgs[i];
+});
+
+/* ---------- ambient floating hearts ---------- */
+if (!reduce) {
+  const sky = $("#sky");
+  const glyphs = ["💗", "✨", "🫧"];
+  function spawn() {
+    const p = document.createElement("span");
+    p.className = "puff";
+    p.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.setProperty("--dx", (Math.random() * 60 - 30) + "px");
+    p.style.animationDuration = (9 + Math.random() * 6) + "s";
+    sky.appendChild(p);
+    setTimeout(() => p.remove(), 16000);
+  }
+  for (let i = 0; i < 4; i++) setTimeout(spawn, i * 1200);
+  setInterval(spawn, 2600);
+}
+</script>
+</body>
+</html>
